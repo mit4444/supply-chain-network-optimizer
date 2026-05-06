@@ -1,0 +1,19 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# PyCharm
+.idea/
+
+# Mac
+.DS_Store
+
+# Dataset zip
+*.zip
+
+# Streamlit cache
+.streamlit/
+
+# Jupyter
+.ipynb_checkpoints/
