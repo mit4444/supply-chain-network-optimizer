@@ -100,7 +100,24 @@ if st.button("Find Shortest Route"):
 
         st.write(" → ".join(path))
 
-        st.write(f"### Total Shipping Time: {total_distance}")
+        # Display edge weights
+        st.write("### Route Breakdown")
+
+        calculated_total = 0
+
+        for i in range(len(path) - 1):
+            source = path[i]
+            destination = path[i + 1]
+
+            edge_weight = G[source][destination]["weight"]
+
+            calculated_total += edge_weight
+
+            st.write(
+                f"{source} → {destination} = {edge_weight} days"
+            )
+
+        st.write(f"### Total Shipping Time: {calculated_total} days")
 
         # -----------------------------
         # ROUTE VISUALIZATION
@@ -140,3 +157,63 @@ if st.button("Find Shortest Route"):
                 html_file.read(),
                 height=550
             )
+
+# ==========================================
+# TOPOLOGICAL SORT SECTION
+# ==========================================
+
+st.write("---")
+
+st.header("Supply Chain Workflow (Kahn's Algorithm)")
+
+st.write(
+    """
+This section demonstrates Kahn's Algorithm
+(Topological Sorting) to determine the correct
+processing order in a supply chain workflow.
+"""
+)
+
+# Create DAG
+workflow_graph = nx.DiGraph()
+
+workflow_graph.add_edges_from([
+    ("Supplier", "Warehouse"),
+    ("Warehouse", "Distribution Center"),
+    ("Distribution Center", "Customer")
+])
+
+# Perform topological sort
+topological_order = list(nx.topological_sort(workflow_graph))
+
+# Display result
+st.write("### Processing Order")
+
+st.write(" → ".join(topological_order))
+
+# ---------------------------------
+# VISUALIZE WORKFLOW GRAPH
+# ---------------------------------
+
+workflow_net = Network(
+    height="400px",
+    width="100%",
+    directed=True
+)
+
+for node in workflow_graph.nodes():
+    workflow_net.add_node(node, label=node)
+
+for edge in workflow_graph.edges():
+    workflow_net.add_edge(edge[0], edge[1])
+
+with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as tmp_file:
+
+    workflow_net.save_graph(tmp_file.name)
+
+    html_file = open(tmp_file.name, "r", encoding="utf-8")
+
+    components.html(
+        html_file.read(),
+        height=450
+    )
