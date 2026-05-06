@@ -17,3 +17,5 @@ __pycache__/
 
 # Jupyter
 .ipynb_checkpoints/
+
+data/DataCoSupplyChainDataset.csv
