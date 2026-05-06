@@ -1,3 +1,6 @@
+from pyvis.network import Network
+import streamlit.components.v1 as components
+import tempfile
 import sys
 import os
 
@@ -98,3 +101,42 @@ if st.button("Find Shortest Route"):
         st.write(" → ".join(path))
 
         st.write(f"### Total Shipping Time: {total_distance}")
+
+        # -----------------------------
+        # ROUTE VISUALIZATION
+        # -----------------------------
+
+        st.write("### Route Visualization")
+
+        net = Network(
+            height="500px",
+            width="100%",
+            directed=True
+        )
+
+        # Add nodes
+        for city in path:
+            net.add_node(city, label=city)
+
+        # Add edges
+        for i in range(len(path) - 1):
+
+            source = path[i]
+            destination = path[i + 1]
+
+            net.add_edge(
+                source,
+                destination
+            )
+
+        # Save graph temporarily
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".html") as tmp_file:
+
+            net.save_graph(tmp_file.name)
+
+            html_file = open(tmp_file.name, "r", encoding="utf-8")
+
+            components.html(
+                html_file.read(),
+                height=550
+            )
