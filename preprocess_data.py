@@ -27,8 +27,7 @@ clean_df = clean_df.dropna()
 # Remove duplicate rows
 clean_df = clean_df.drop_duplicates()
 
-# Keep only first 5000 rows for performance
-clean_df = clean_df.head(100000)
+
 
 # Save cleaned dataset
 clean_df.to_csv("data/cleaned_supply_chain_data.csv", index=False)
